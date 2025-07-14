@@ -1,5 +1,6 @@
 package com.codewithmosh.Shop.entities;
 
+import com.codewithmosh.Shop.repositories.TagRepository;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -47,10 +48,11 @@ public class User {
     )
     @Builder.Default //needed if using Builder annotation
     private Set<Tag> tags = new HashSet<>();
-    public void AddTags(String tag) {
+    public void AddTags(String tag, TagRepository tagRepository) {
         Tag tagObj = new Tag(tag);
         tags.add(tagObj);
         tagObj.getUsers().add(this);
+        tagRepository.save(tagObj);
     }
     public void RemoveTags(Tag tag) {
         tags.remove(tag);
@@ -58,4 +60,11 @@ public class User {
     }
     @OneToOne(mappedBy = "user")
     private Profile profile;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "wishlist",
+            joinColumns =  @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> products = new HashSet<>();
 }

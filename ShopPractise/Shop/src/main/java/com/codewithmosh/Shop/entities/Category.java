@@ -1,28 +1,27 @@
 package com.codewithmosh.Shop.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-@Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor //default constructor
-@Builder
+@Setter
 @Entity
 @Table(name = "categories")
-@ToString
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private byte id;
-    @Column(nullable = false, name = "name")
+    @Column(name = "id", nullable = false)
+    private Byte id;
+
+    @Column(name = "name", nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "category")
-    private List<Product> products = new ArrayList<Product>();
+    private Set<Product> products = new HashSet<>();
 
     public void AddProduct(Product product) {
         products.add(product);
@@ -32,5 +31,4 @@ public class Category {
         products.remove(product);
         product.setCategory(null);
     }
-
 }

@@ -20,7 +20,7 @@ public class Tag {
     @Column(nullable = false, name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
 
