@@ -4,7 +4,10 @@ import com.codewithmosh.Shop.repositories.TagRepository;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -12,7 +15,6 @@ import java.util.*;
 @NoArgsConstructor //default constructor
 @Builder
 @Entity
-@ToString
 @Table(name = "users")
 public class User {
 
@@ -28,7 +30,7 @@ public class User {
     @Column(nullable = false, name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true) //use persist to ensure when new user is made in code, address entity is also made
     @Builder.Default
     private List<Address> addresses = new ArrayList<>();
 
@@ -58,13 +60,32 @@ public class User {
         tags.remove(tag);
         tag.getUsers().remove(this);
     }
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Profile profile;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "wishlist",
             joinColumns =  @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private Set<Product> products = new HashSet<>();
+    public void AddProduct(Product product) {
+        products.add(product);
+    }
+    public Address getAddress(long userId) {
+        for (Address address : addresses) {
+            if (address.getUser().getId() == userId) {
+                return address;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "name = " + name + ", " +
+                "email = " + email + ")";
+    }
 }

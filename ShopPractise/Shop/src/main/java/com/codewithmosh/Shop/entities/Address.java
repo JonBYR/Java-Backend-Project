@@ -25,7 +25,7 @@ public class Address {
     @Column(nullable = false, name = "postcode")
     private String postcode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid")
     @ToString.Exclude
     private User user;

@@ -20,7 +20,7 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
     private Set<Product> products = new HashSet<>();
 
     public void AddProduct(Product product) {

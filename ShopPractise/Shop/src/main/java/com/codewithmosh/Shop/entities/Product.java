@@ -25,7 +25,8 @@ public class Product {
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    //cascade can also be on the one to many bean, if the repository that is saved to is categoryRepository
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
     @ManyToMany(mappedBy = "products")

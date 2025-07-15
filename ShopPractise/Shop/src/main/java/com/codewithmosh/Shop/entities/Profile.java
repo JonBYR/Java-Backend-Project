@@ -25,7 +25,7 @@ public class Profile {
 
     @Column(nullable = false, name = "loyalty_points")
     private int loyaltyPoints;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id") //join column used here as this is the foreign key
     @MapsId //use same column for primary and foreign key
     @ToString.Exclude
