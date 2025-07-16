@@ -21,7 +21,7 @@ public class ShopApplication {
 		var repository = context.getBean(ProductService.class);
 		var userService = context.getBean(UserService.class);
 		var tagRepo = context.getBean(TagRepository.class);
-		userService.getLoyalty();
+		repository.GetProductsBySpecification("Apple", null, null);
 	}
 
 }
