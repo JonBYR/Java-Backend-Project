@@ -21,7 +21,11 @@ public class ShopApplication {
 		var repository = context.getBean(ProductService.class);
 		var userService = context.getBean(UserService.class);
 		var tagRepo = context.getBean(TagRepository.class);
-		repository.GetProductsBySpecification("Apple", null, null);
+		//repository.newProduct("Banana", new BigDecimal(2.45), "1");
+		//repository.addToWishList(1L);
+		//repository.CustomUpdate(new BigDecimal("1.10"), (byte)1);
+		//userService.AddressInfoBy("L");
+		userService.DeleteRelated();
 	}
 
 }

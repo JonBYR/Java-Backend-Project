@@ -32,4 +32,11 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "name = " + name + ", " +
+                "price = " + price + ")";
+    }
 }

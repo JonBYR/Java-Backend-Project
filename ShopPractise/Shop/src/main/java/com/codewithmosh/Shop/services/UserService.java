@@ -5,12 +5,15 @@ import com.codewithmosh.Shop.entities.Profile;
 import com.codewithmosh.Shop.entities.User;
 import com.codewithmosh.Shop.repositories.AddressRepository;
 import com.codewithmosh.Shop.repositories.ProfileRepository;
+import com.codewithmosh.Shop.repositories.TagRepository;
 import com.codewithmosh.Shop.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -19,6 +22,8 @@ public class UserService {
     private final EntityManager em;
     private final ProfileRepository profileRepository;
     private final AddressRepository addressRepository;
+    private final TagRepository tagRepository;
+
     @Transactional //makes all transactions (save and em.contains) as part of one transactional statement
     public void ShowEntityStates() {
         var user = new User();
@@ -46,21 +51,23 @@ public class UserService {
         user.setName("Joel");
         user.setPassword("QuiteSecureInnit");
         var address =  new Address();
-        address.setPostcode("TN8 6AA");
+        address.setPostcode("LNA 6AB");
         address.setCity("Lincoln");
-        address.setStreet("Guy");
+        address.setStreet("12 Sincil Bank");
         user.AddAddress(address);
         userRepository.save(user);
     }
     @Transactional
     public void DeleteRelated() {
-        //userRepository.deleteById(7L); //delete a user
-        var user = userRepository.findById(18L).orElseThrow();
+        userRepository.deleteById(6L); //delete a user
+        /*
+        var user = userRepository.findById(1L).orElseThrow();
         var address = user.getAddress(user.getId());
         if (address != null) {
             user.RemoveAddress(address);
         }
         userRepository.save(user);
+         */
     }
     @Transactional
     public void fetchUser() {
@@ -71,8 +78,12 @@ public class UserService {
     public void fetchWithAddresses() {
         var users =  userRepository.findAllWithAddresses();
         users.forEach(u -> {
-            System.out.println(u);
-            u.getAddresses().forEach(System.out::println);
+            System.out.println(u.toString());
+            List<Address> addresses = u.getAddresses();
+            addresses.forEach(address -> {
+                System.out.println(address.toString());
+            });
+            //u.getAddresses().forEach(System.out::println);
         });
     }
     @Transactional
@@ -81,5 +92,26 @@ public class UserService {
         for (var profile : profiles) {
             System.out.println(profile.getId() + " " + profile.getEmail());
         }
+    }
+    @Transactional
+    public void AddressInfo(String City) {
+        List<Address> addresses = addressRepository.findAddressByCityLike(City);
+        for(Address a : addresses) {
+            System.out.println(a.toString());
+        }
+    }
+    @Transactional
+    public void AddressInfoBy(String City) {
+        List<Address> addresses = addressRepository.findTop5ByCityStartingWith(City);
+        for(Address a : addresses) {
+            System.out.println(a.toString());
+        }
+    }
+    @Transactional
+    public void addTags(Long userId, Long TagId) {
+        var user =  userRepository.findById(userId).orElseThrow();
+        var tag = tagRepository.findById(TagId).orElseThrow();
+        user.AddTags(tag);
+        userRepository.save(user);
     }
 }

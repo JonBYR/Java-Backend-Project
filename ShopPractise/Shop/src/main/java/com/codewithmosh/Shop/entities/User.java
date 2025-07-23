@@ -50,11 +50,8 @@ public class User {
     )
     @Builder.Default //needed if using Builder annotation
     private Set<Tag> tags = new HashSet<>();
-    public void AddTags(String tag, TagRepository tagRepository) {
-        Tag tagObj = new Tag(tag);
-        tags.add(tagObj);
-        tagObj.getUsers().add(this);
-        tagRepository.save(tagObj);
+    public void AddTags(Tag t) {
+        tags.add(t);
     }
     public void RemoveTags(Tag tag) {
         tags.remove(tag);

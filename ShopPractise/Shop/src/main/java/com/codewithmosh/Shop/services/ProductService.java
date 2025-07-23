@@ -40,17 +40,17 @@ public class ProductService {
         category.AddProduct(product);
     }
     @Transactional
-    public void newProduct() {
-        var category = categoryRepository.findById(java.lang.Byte.valueOf("1")).orElseThrow();
+    public void newProduct(String name, BigDecimal price, String catId) {
+        var category = categoryRepository.findById(java.lang.Byte.valueOf(catId)).orElseThrow();
         var product = new Product();
-        product.setName("Pineapple");
-        product.setPrice(new BigDecimal(4));
+        product.setName(name);
+        product.setPrice(price);
         category.AddProduct(product);
         productRepository.save(product);
     }
     @Transactional
-    public void addToWishList() {
-        var user = userRepository.findById(18L).orElseThrow();
+    public void addToWishList(Long userId) {
+        var user = userRepository.findById(userId).orElseThrow();
         var products = productRepository.findAll();
         products.forEach(user::AddProduct);
         userRepository.save(user);
@@ -58,11 +58,10 @@ public class ProductService {
     @Transactional
     public void removeFromWishList() {
         productRepository.deleteById(4L);
-
     }
     @Transactional //always have this for custom queries
-    public void CustomUpdate() {
-        productRepository.UpdatePriceByCategory(new BigDecimal(24), (byte)1);
+    public void CustomUpdate(BigDecimal newPrice, int catId) {
+        productRepository.UpdatePriceByCategory(newPrice, (byte)catId);
     }
 
     @Transactional
@@ -103,7 +102,10 @@ public class ProductService {
         if(max != null) {
             spec.and(ProductSpec.PriceLessThan(max));
         }
-        secondProductRepository.findAll(spec).forEach(System.out::println);
+        List<Product> produce = secondProductRepository.findAll(spec);
+        for (Product product : produce) {
+            System.out.println(product.toString());
+        }
     }
     public void GetSortedProducts() {
         var sort = Sort.by("name").and(Sort.by("price").descending());
